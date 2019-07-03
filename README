@@ -7,6 +7,57 @@
    $make
    $make install
 
+/*****************************************************************************************************************************************
+执行install_gcc-7.4.0.sh 遇到错误解决办法
+错误1：configure: error: Building GCC requires GMP 4.2+, MPFR 2.4.0+ and MPC 0.8.0+.
+
+方法一：试试 $sudo apt-get install libmpfr-dev libgmp3-dev libmpc-dev flex bison  gcc-multilib
+方法二：执行一下步骤分别安装：
+下载最新的gmp包，https://gmplib.org/ 
+解压下载的包
+$sudo apt-get install m4
+$ sudo apt install lzip
+$ lzip -d  gmp-6.1.2.tar.lz
+$ tar -xvf gmp-6.1.2.tar
+$cd gmp-6.1.2
+$./configure --enable-cxx
+$make
+$make check
+$sudo make install
+
+下载MPFR https://www.mpfr.org/mpfr-current/
+$mkdir mpfr-4.0.2-obj
+$cd mpfr-4.0.2-obj/
+$../mpfr-4.0.2/configure --prefix=/home/abc/Program/codeViz/codeviz/compilers/mpfr-4.0.2-obj --with-gmp=/home/abc/Program/codeViz/codeviz/compilers/mpfr-4.0.2-obj
+$make
+$sudo make install
+
+$sudo apt-get install libmpc-dev
+
+
+错误2：configure: error: I suspect your system does not have 32-bit development libraries (libc and headers). If you have them, rerun configure with --enable-multilib. If you do not have them, and want to build a 64-bit-only compiler, rerun configure with --disable-multilib.
+
+在install_gcc-7.4.0.sh 脚本line 35 给GCC config添加 --disable-multilib
+ 
+
+
+编译GCC 7.4.0 报错
+进入到GCC 7.4.0 源码目录下：
+$cd gcc-7.4.0
+$contrib/download_prerequisites
+$make –j1
+
+
+
+Error: cannot find crti.o: No such file or directory
+
+配置./configure的时候认为要编译32位的程序，那么怎么让系统编译64位的呢？
+加上--build=x86_64-linux 就可以了
+$ sudo ln -s /usr/lib/x86_64-linux-gnu /usr/lib64
+$sudo apt-get install libc6-dev-mipsel-cross
+*****************************************************************************************************************************************/
+
+
 
 WHERE DOES THIS CONTENT COMES FROM?
 -----------------------------------
