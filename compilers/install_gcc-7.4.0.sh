@@ -32,11 +32,12 @@ patch -p1 < ../../gcc-patches/gcc-7.4.0-cdepn.diff
 cd ../objdir
 
 # Configure and compile
-../gcc-7.4.0/configure --prefix=$INSTALL_PATH --enable-shared --enable-languages=c,c++ || exit
+../gcc-7.4.0/configure --prefix=$INSTALL_PATH --with-gnu-as --build=x86_64-linux --enable-shared --with-gnu-ld --enable-threads=posix --with-ecj-jar=/usr/share/java/ecj.jar --enable-languages=c,c++ --with-ld=/usr/bin/x86_64-linux-gnu-ld --enable-bootstrap --disable-multiarch --disable-multilib --enable-shared --disable-multilib || exit
+../gcc-7.4.0/contrib/download_prerequisites
 make bootstrap
 
 RETVAL=$?
-PLATFORM=i686-pc-linux-gnu
+PLATFORM=x86_64-pc-linux-gnu
 if [ $RETVAL != 0 ]; then
   if [ ! -e $PLATFORM/libiberty/config.h ]; then
     echo Checking if this is CygWin
@@ -63,7 +64,7 @@ if [ $RETVAL != 0 ]; then
     echo "#define HAVE_SYS_STAT_H 1" >> config.h
   fi
   cd ../../
-  make
+  make -j1
 
   RETVAL=$?
   if [ $RETVAL != 0 ]; then
