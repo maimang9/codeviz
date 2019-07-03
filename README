@@ -1,12 +1,39 @@
-
-1. 修改 configure 文件: line 8: PREFIX=~;  line 9: GCCVERSION=7.4.0, line 85:GCCGRAPH=$PREFIX/gcc-graph
-2. 修改install_gcc-7.4.0.sh 文件： line 35: ../gcc-7.4.0/configure --prefix=$INSTALL_PATH --with-gnu-as --build=x86_64-linux --enable-shared --with-gnu-ld --enable-threads=posix --with-ecj-jar=/usr/share/java/ecj.jar --enable-languages=c,c++,fortran,objc --enable-bootstrap --disable-multiarch --disable-multilib --enable-shared --disable-multilib || exit
+1. 修改CollectCXref.pm ：
+   line 208：if ($line =~ /^F \{(.*)\} \{(.+):(.+)\}/) {
+   line 223: if ($line =~ /^C \{(.*)\} \{(.+):(.+)\}\s+(.+)/) {
+2. 修改文件CollectCppDepn.pm:
+   line 139: if (/^F \{(.*)\} \{(.+):(.+)\}/) {
+   line 146:  } elsif (/^C \{(.*)\} \{(.+):(.+)\}\s+(.+)/) {
+3. 修改 configure 文件: 
+   line 8: PREFIX=~;  
+   line 9: GCCVERSION=7.4.0, 
+   line 85:GCCGRAPH=$PREFIX/gcc-graph
+4. 修改install_gcc-7.4.0.sh 文件： 
+   line 35: ../gcc-7.4.0/configure --prefix=$INSTALL_PATH --with-gnu-as --build=x86_64-linux --enable-shared --with-gnu-ld --enable-threads=posix --with-ecj-jar=/usr/share/java/ecj.jar --enable-languages=c,c++,fortran,objc --enable-bootstrap --disable-multiarch --disable-multilib --enable-shared --disable-multilib || exit
    line 39: PLATFORM=x86_64-pc-linux-gnu; line 66: make -j1
    mark 掉 line 77, line 79, 安装gcc
-3. 执行 
+5. 执行 
    $./configure 
    $make
    $make install
+
+
+*** CodeViz is now installed to  and testsuites passed ***
+Patched gcc is installed to /home/abc/gcc-graph. To compile a project
+for use with CodeViz, genearlly the following will work
+
+make CC=/home/abc/gcc-graph/bin/gcc or g++
+
+To generate a full.graph file for C, use
+
+genfull
+
+For C++, make sure you use the cppdepn method with
+
+genfull -g cppdepn
+
+or the results will not be what you expect.
+
 
 使用编译好的gcc 重新编译源码
 $genfull
